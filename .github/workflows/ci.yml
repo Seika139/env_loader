@@ -28,12 +28,12 @@ jobs:
       - name: Install dependencies
         run: poetry install
       - name: Lint with flake8
-        run: poetry run flake8 scribe tests
+        run: poetry run flake8 src/ tests/
       - name: Format with black
-        run: poetry run black --check scribe tests
+        run: poetry run black --check src/ tests/
       - name: Sort imports with isort
-        run: poetry run isort --check scribe tests
+        run: poetry run isort --check src/ tests/
       - name: Type check with mypy
-        run: poetry run mypy scribe tests
+        run: poetry run mypy src/ tests/
       - name: Run tests with pytest
-        run: poetry run pytest tests
+        run: poetry run pytest tests/
