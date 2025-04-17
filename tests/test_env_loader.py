@@ -5,7 +5,7 @@ from unittest.mock import patch
 import pytest
 from dotenv import load_dotenv
 
-from src.env_loader.env_loader import get_env
+from env_loader.env_loader import get_env
 
 # テスト用の .env ファイルの内容
 TEST_ENV_CONTENT = """
@@ -16,14 +16,14 @@ EMPTY_KEY=
 
 
 @pytest.fixture
-def temp_env_file(tmp_path):
+def temp_env_file(tmp_path: Path) -> Path:
     """一時的な .env ファイルを作成するフィクスチャ"""
     env_file = tmp_path / ".env_test"
     env_file.write_text(TEST_ENV_CONTENT)
     return env_file
 
 
-def test_get_env_github_actions_present():
+def test_get_env_github_actions_present() -> None:
     """GitHub Actions 環境変数が存在する場合のテスト"""
     with patch.dict(
         os.environ, {"GITHUB_ACTIONS": "true", "ACTION_INPUT_MY_KEY": "github_value"}
@@ -36,7 +36,7 @@ def test_get_env_github_actions_present():
             get_env("REQUIRED_KEY", required=True)
 
 
-def test_get_env_github_actions_absent(temp_env_file):
+def test_get_env_github_actions_absent(temp_env_file: Path) -> None:
     """GitHub Actions 環境変数が存在しない場合の .env ファイルからの読み込みテスト"""
     with patch.dict(os.environ, {}, clear=True):
         load_dotenv(dotenv_path=str(temp_env_file))  # 絶対パスを文字列として渡す
@@ -60,7 +60,7 @@ def test_get_env_default_env_file(tmp_path: Path) -> None:
         assert value == "default_value_from_default"
 
 
-def test_get_env_required_present_github_actions():
+def test_get_env_required_present_github_actions() -> None:
     """required=True で GitHub Actions 環境変数が存在する場合のテスト"""
     with patch.dict(
         os.environ, {"GITHUB_ACTIONS": "true", "REQUIRED_KEY": "required_value"}
@@ -69,7 +69,7 @@ def test_get_env_required_present_github_actions():
         assert value == "required_value"
 
 
-def test_get_env_required_present_env_file(temp_env_file):
+def test_get_env_required_present_env_file(temp_env_file: Path) -> None:
     """required=True で .env ファイルに環境変数が存在する場合のテスト"""
     with patch.dict(os.environ, {}, clear=True):
         load_dotenv(dotenv_path=str(temp_env_file))  # 絶対パスを文字列として渡す
