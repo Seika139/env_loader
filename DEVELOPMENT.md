@@ -1,27 +1,20 @@
 # For Developers
 
-## Dependencies
+## Required Dependencies
 
-- `Python`: 3.10 or higher
+- `Python`: 3.9 or higher
 - `poetry`: This project uses Poetry for dependency management.
 
-### Recommended Dependencies
+## Recommended Packages
 
-- `make`: Makefile is used for managing tasks.
+- `make`: Run `make` commands to simplify the development process.
+- `Docker`: Tests can be run in a Docker container.
 
 ## Development Setup
 
 ```bash
 # After cloning the repository
-poetry install --group dev
-```
-
-## Tests
-
-```bash
-poetry run pytest tests
-# or
-make test
+poetry install --with dev
 ```
 
 ## Coding Style
@@ -31,16 +24,20 @@ use `flake8` for linting and `mypy` for type checking.
 
 ```bash
 # formatting
-poetry run isort src tests && poetry run black src tests
-# or
 make format
 
 # linting & type checking
-poetry run flake8 src tests
-poetry run mypy src tests
-# or
 make check
 ```
+
+## Tests
+
+`make test` run `pytest` in both local and Docker environments.
+If you want to run `pytest` in a Docker container, you can use `make test-docker`.
+If you want to run `pytest` in your local environment, you can use `make test-local`.
+
+After finishing the tests, remove the Docker container with `make down`.
+Also, you can run `make clean` to remove all Docker containers and images.
 
 ## CI
 
