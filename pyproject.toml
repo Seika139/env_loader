@@ -1,6 +1,6 @@
 [project]
 name = "env-loader"
-version = "0.1.0"
+version = "0.2.0"
 description = ""
 authors = [
     { name = "Seika139", email = "33862136+Seika139@users.noreply.github.com" },
