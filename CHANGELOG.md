@@ -1,18 +1,20 @@
 # Changelog
 
-<!-- markdownlint-disable MD024 MD029 MD033 -->
+<!-- markdownlint-disable MD024 -->
 
 全ての注目すべき変更はこのファイルに記録されます。
 
 フォーマットは [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) に基づいており、
 このプロジェクトは [Semantic Versioning](https://semver.org/spec/v2.0.0.html) に従います。
 
-## [0.2.0] - 2025-05-22
+## [0.2.0] - 2025-05-23
 
 ### Changed
 
 - `get_env` 関数の仕様を変更し、`Optional[str]` を返すシンプルな関数に変更
 - `required` パラメータを削除
+- パッケージのインターフェイスを改善し、`from env_loader import get_env` でのインポートをサポート
+- `__version__` 変数を追加してバージョン情報を提供
 
 ### Added
 
