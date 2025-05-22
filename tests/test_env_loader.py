@@ -5,7 +5,7 @@ from unittest.mock import patch
 import pytest
 from dotenv import load_dotenv
 
-from env_loader.env_loader import get_env
+from env_loader.env_loader import get_env, require_env
 
 # テスト用の .env ファイルの内容
 TEST_ENV_CONTENT = """
@@ -32,8 +32,6 @@ def test_get_env_github_actions_present() -> None:
         assert value == "github_value"
         assert get_env("NON_EXISTENT_KEY") is None
         assert get_env("NON_EXISTENT_KEY", default="default_value") == "default_value"
-        with pytest.raises(ValueError):
-            get_env("REQUIRED_KEY", required=True)
 
 
 def test_get_env_github_actions_absent(temp_env_file: Path) -> None:
@@ -46,8 +44,6 @@ def test_get_env_github_actions_absent(temp_env_file: Path) -> None:
         assert get_env("EMPTY_KEY") == ""
         assert get_env("NON_EXISTENT_KEY") is None
         assert get_env("NON_EXISTENT_KEY", default="default_value") == "default_value"
-        with pytest.raises(ValueError):
-            get_env("REQUIRED_KEY", required=True)
 
 
 def test_get_env_default_env_file(tmp_path: Path) -> None:
@@ -60,18 +56,29 @@ def test_get_env_default_env_file(tmp_path: Path) -> None:
         assert value == "default_value_from_default"
 
 
-def test_get_env_required_present_github_actions() -> None:
-    """required=True で GitHub Actions 環境変数が存在する場合のテスト"""
+def test_require_env_present_github_actions() -> None:
+    """require_env で GitHub Actions 環境変数が存在する場合のテスト"""
     with patch.dict(
         os.environ, {"GITHUB_ACTIONS": "true", "REQUIRED_KEY": "required_value"}
     ):
-        value = get_env("REQUIRED_KEY", required=True)
+        value = require_env("REQUIRED_KEY")
         assert value == "required_value"
 
 
-def test_get_env_required_present_env_file(temp_env_file: Path) -> None:
-    """required=True で .env ファイルに環境変数が存在する場合のテスト"""
+def test_require_env_present_env_file(temp_env_file: Path) -> None:
+    """require_env で .env ファイルに環境変数が存在する場合のテスト"""
     with patch.dict(os.environ, {}, clear=True):
         load_dotenv(dotenv_path=str(temp_env_file))  # 絶対パスを文字列として渡す
-        value = get_env("TEST_KEY", required=True)
+        value = require_env("TEST_KEY")
         assert value == "test_value"
+
+
+def test_require_env_missing() -> None:
+    """require_env で環境変数が存在しない場合のテスト"""
+    with patch.dict(os.environ, {}, clear=True):
+        with pytest.raises(ValueError) as exc_info:
+            require_env("NON_EXISTENT_KEY")
+        assert (
+            str(exc_info.value)
+            == "Required environment variable 'NON_EXISTENT_KEY' not found."
+        )
