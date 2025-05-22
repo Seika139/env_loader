@@ -1,5 +1,7 @@
 # Changelog
 
+<!-- markdownlint-disable MD024 MD029 MD033 -->
+
 全ての注目すべき変更はこのファイルに記録されます。
 
 フォーマットは [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) に基づいており、
